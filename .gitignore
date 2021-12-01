@@ -1,0 +1,4 @@
+*/bin
+*/.cache
+*/.cppb/dependencies
+*/compile_commands.json
