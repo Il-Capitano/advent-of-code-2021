@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <array>
 #include <cassert>
+#include <vector>
 
 namespace utils
 {
@@ -68,7 +69,8 @@ struct range_base_collect
 	template<typename Vec>
 	Vec collect(void) const;
 
-	auto collect(void) const;
+	auto collect(void) const
+	{ return this->template collect<std::vector>(); }
 };
 
 template<typename Range>

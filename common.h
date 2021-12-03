@@ -69,6 +69,23 @@ Int parse_int(std::string_view str) noexcept
 	return result;
 }
 
+template<typename Int, Int Base>
+Int parse_int_base(std::string_view str) noexcept
+{
+	static_assert(Base <= 10 && Base >= 2);
+	Int result(0);
+	for (auto const c : str)
+	{
+		if (c < '0' || c > '9')
+		{
+			break;
+		}
+		result *= Int(Base);
+		result += Int(c - '0');
+	}
+	return result;
+}
+
 template<typename ParseFunc>
 auto read_file(fs::path const &file, ParseFunc parse_func)
 {
