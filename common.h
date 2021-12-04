@@ -102,4 +102,18 @@ auto read_file(fs::path const &file, ParseFunc parse_func)
 	return result;
 }
 
+inline vector<std::string_view> split_by(std::string_view str, std::string_view split_str)
+{
+	vector<std::string_view> result;
+	auto it = str.find(split_str);
+	while (it != std::string_view::npos)
+	{
+		result.push_back(str.substr(0, it));
+		str = str.substr(it + split_str.size());
+		it = str.find(split_str);
+	}
+	result.push_back(str);
+	return result;
+}
+
 #endif // AOC_COMMON_H
