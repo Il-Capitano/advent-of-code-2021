@@ -239,6 +239,12 @@ struct collection_base_sort
 	void sort(Cmp &&cmp) noexcept;
 };
 
+template<typename Collection>
+struct collection_base_reversed
+{
+	auto reversed(void) noexcept;
+};
+
 template<typename Range>
 struct range_base_enumerate
 {
@@ -292,6 +298,7 @@ struct collection_base :
 	internal::collection_base_max        <Collection>,
 	internal::collection_base_min        <Collection>,
 	internal::collection_base_sort       <Collection>,
+	internal::collection_base_reversed   <Collection>,
 	internal::collection_base_enumerate  <Collection>
 {
 	auto as_range(void) const noexcept;
@@ -1251,6 +1258,13 @@ void collection_base_sort<Collection>::sort(Cmp &&cmp) noexcept
 {
 	auto const self = static_cast<Collection *>(this);
 	std::sort(self->begin(), self->end(), std::forward<Cmp>(cmp));
+}
+
+template<typename Collection>
+auto collection_base_reversed<Collection>::reversed(void) noexcept
+{
+	auto const self = static_cast<Collection *>(this);
+	return basic_range{ self->rbegin(), self->rend() };
 }
 
 template<typename Range>
