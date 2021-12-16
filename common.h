@@ -25,6 +25,12 @@ struct span : std::span<T>, utils::collection_base<span<T>>
 
 	span<T const> slice(std::size_t begin, std::size_t end) const
 	{ return span(this->data() + begin, this->data() + end); }
+
+	span<T> slice(std::size_t begin)
+	{ return span(this->data() + begin, this->data() + this->size()); }
+
+	span<T const> slice(std::size_t begin) const
+	{ return span(this->data() + begin, this->data() + this->size()); }
 };
 
 template<typename T>
@@ -37,6 +43,12 @@ struct vector : std::vector<T>, utils::collection_base<vector<T>>
 
 	span<T const> slice(std::size_t begin, std::size_t end) const
 	{ return span(this->data() + begin, this->data() + end); }
+
+	span<T> slice(std::size_t begin)
+	{ return span(this->data() + begin, this->data() + this->size()); }
+
+	span<T const> slice(std::size_t begin) const
+	{ return span(this->data() + begin, this->data() + this->size()); }
 };
 
 struct string : std::string, utils::collection_base<string>
