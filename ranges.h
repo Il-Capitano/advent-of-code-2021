@@ -190,6 +190,8 @@ struct range_base_reduce
 {
 	template<typename BinOp>
 	auto reduce(BinOp &&bin_op) const noexcept;
+	template<typename T, typename BinOp>
+	auto reduce(T init_val, BinOp &&bin_op) const noexcept;
 };
 
 template<typename Collection>
@@ -197,6 +199,8 @@ struct collection_base_reduce
 {
 	template<typename BinOp>
 	auto reduce(BinOp &&bin_op) const noexcept;
+	template<typename T, typename BinOp>
+	auto reduce(T init_val, BinOp &&bin_op) const noexcept;
 };
 
 template<typename Range>
@@ -1140,10 +1144,27 @@ auto range_base_reduce<Range>::reduce(BinOp &&bin_op) const noexcept
 	return result;
 }
 
+template<typename Range>
+template<typename T, typename BinOp>
+auto range_base_reduce<Range>::reduce(T init_val, BinOp &&bin_op) const noexcept
+{
+	auto const self = static_cast<Range const *>(this);
+	for (auto &&it : *self)
+	{
+		init_val = bin_op(std::move(init_val), std::forward<decltype(it)>(it));
+	}
+	return init_val;
+}
+
 template<typename Collection>
 template<typename BinOp>
 auto collection_base_reduce<Collection>::reduce(BinOp &&bin_op) const noexcept
 { return static_cast<Collection const *>(this)->as_range().reduce(std::forward<BinOp>(bin_op)); }
+
+template<typename Collection>
+template<typename T, typename BinOp>
+auto collection_base_reduce<Collection>::reduce(T init_val, BinOp &&bin_op) const noexcept
+{ return static_cast<Collection const *>(this)->as_range().reduce(std::move(init_val), std::forward<BinOp>(bin_op)); }
 
 template<typename Range>
 auto range_base_max<Range>::max(void) const noexcept
