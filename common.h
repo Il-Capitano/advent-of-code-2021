@@ -68,6 +68,11 @@ struct unordered_map : std::unordered_map<Key, Value>, utils::collection_base<un
 template<typename Int>
 Int parse_int(std::string_view str) noexcept
 {
+	auto const sign = !str.empty() && str[0] == '-';
+	if (sign)
+	{
+		str = str.substr(1);
+	}
 	Int result(0);
 	for (auto const c : str)
 	{
@@ -78,13 +83,18 @@ Int parse_int(std::string_view str) noexcept
 		result *= Int(10);
 		result += Int(c - '0');
 	}
-	return result;
+	return sign ? -result : result;
 }
 
 template<typename Int, Int Base>
 Int parse_int_base(std::string_view str) noexcept
 {
 	static_assert(Base <= 10 && Base >= 2);
+	auto const sign = !str.empty() && str[0] == '-';
+	if (sign)
+	{
+		str = str.substr(1);
+	}
 	Int result(0);
 	for (auto const c : str)
 	{
@@ -95,7 +105,7 @@ Int parse_int_base(std::string_view str) noexcept
 		result *= Int(Base);
 		result += Int(c - '0');
 	}
-	return result;
+	return sign ? -result : result;
 }
 
 template<typename ParseFunc>
